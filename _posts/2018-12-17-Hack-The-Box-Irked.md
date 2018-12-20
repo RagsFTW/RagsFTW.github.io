@@ -14,4 +14,4 @@ Tackling a Hack The Box (HTB) machine is always going to be a bit different than
 Wait? What happened to the Recon phase?  This is one of those things that is different about a HTB challenge.  Since I already know what my target is, I don't really have to do recon, and can just move into scanning.  If there were an actual company target, or something I would do professionally, then I would be learning as much as possible about the company and their systems minus any actual network or phyiscal interaction with the systems.
 
 ### Nmap
-Text.
+More coming soon (when Irked is retired)...
