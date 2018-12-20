@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Hack The Box: Irked
+title: Hack The Box - Irked
 ---
 
 My first [Hack The Box](https://www.hackthebox.eu/) system (and now my first blog post) is in the books!
