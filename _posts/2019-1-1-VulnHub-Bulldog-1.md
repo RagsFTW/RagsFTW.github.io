@@ -16,6 +16,6 @@ Wait? What happened to the Recon phase?  This is one of those things that is dif
 ### Nmap
 Nmap is typically the "go-to" first tool when conducting a pen test or a Capture the Flag (CTF).  On my local network, Bulldog 1 recieved an IP address of 192.168.56.4.  So lets get started...
 
-```bash
+```
 nmap -vvv -sT -sV 192.168.56.4  --open -oA bulldog_nmap
 ```
