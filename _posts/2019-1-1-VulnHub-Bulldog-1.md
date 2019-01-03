@@ -19,14 +19,56 @@ Nmap is typically the "go-to" first tool when conducting a pen test or a Capture
 ```
 nmap -vvv -p- -sT -sV 192.168.56.4  --open -oA bulldog_nmap
 ```
-When the Nmap completes, we see that we have two web ports open at port 80 and 8080.  I will save you some time, these are the same.  There are no differences between the two ports.  Lets do some quick web "recon"...
+When the Nmap completes, we see that we have two web ports open at port 80 and 8080.  I will save you some time, these are the same.  There are no differences between the sites hosted on the two ports.
+
+(Image 1)
+**Image 1** - The Nmap results.
+
+Lets move on to some quick web "recon"...
 
 ### Dirb
-In the real world I may not use a directroy scanner, they are noisy and in rare instances could cause impacts.  On a VulnHub system, it is OK to "go loud".  Dirb is pretty simple, just give it a target and a world list and you are good to go!
+Generally when i see something open on port 80, I will fire up a browser and see what I am dealing with...
+
+(Image 2)
+**Image 2** - The Bulldog 1 homepage.
+
+In the real world I may not use a directory scanner, they are noisy and in rare instances could cause impacts.  On a VulnHub system, it is OK to "go loud".  Dirb is pretty simple, just give it a target and the path to a world list and you are good to go!
 
 ```
-dirb http://192.168.56.4 /usr/share/wordlists/dirb/big.txt 
+dirb http://192.168.56.4 /usr/share/wordlists/dirb/small.txt -r
 ```
-When dirb finihses, we can see that it found a "/admin" directory, so let's check it out!
+When dirb finihses, we can see that it found a "/admin" directory and a "/dev" directory, so let's check it out!
 
-More to come...
+(Image 3)
+**Image 3** - The dirb results.
+
+### Digging Into The Webpage
+Now that we have a listing of pages, let's take a look at each.
+
+(Image 4)
+**Image 4** - The /admin page.
+
+Here on the /admin page we see a login prompt for Django.  Note this page for later...
+
+(Image 5)
+**Image 5** - The /dev page.
+
+Here on the /dev page, at the bottom, we see some key pieces of information: email addresses and a link to a Web Shell.
+
+(Image 6)
+**Image 6** - The Web Shell page.
+
+Quickly clicking on the Web Shell link we are greated by a page that says we need to authenticate.  That's OK, let's go back to the /dev page...
+
+At the bottom of the page we saw email addresses, or should I say usernames!  This is perfect for making a list of potential usernames to use in our attacks.
+
+At this point we have some options: 1) brute force the login page, 2) crack the users passwords.  Let's go with option 2.  "But i don't have and passwords!" you may say.  But if we take a look at the source of the /dev page we will see some hashes!!!
+
+(Image 7)
+**Image 7** - The source of the /dev page.
+
+You may think that this is crazy, but this is something I have seen in the wild!
+
+## Exploitation
+Now we have moved out of the realm of scanning and into exploitation!
+
