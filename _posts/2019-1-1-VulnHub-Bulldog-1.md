@@ -67,9 +67,34 @@ At this point we have some options: 1) brute force the login page, 2) crack the 
 (Image 7)
 **Image 7** - The source of the /dev page.
 
-You may think that this is crazy, but this is something I have seen in the wild!
+You may think that this is crazy, but this is something I have seen in the wild!  You *could* brute force the login via a public wordlist or a specially crafted wordlist but it would take some time.  If you do, want to go the crafted wordlist route, your base words are pretty obvious.  :)
 
 ## Exploitation
-Now we have moved out of the realm of scanning and into exploitation!
+Now we have moved out of the realm of scanning and into exploitation!  First thing that we need to do is crack these hahses...
+
+### Hashcat
+In order to crack these hashes, we first have to do a few things.  The first of which would be to identify the kind of hash we are going to crack.  Using a tool called "hashid", we can identify the hash so we can tell hashcat how to crack the hash.  Copy one of the hashses to your clipboard and then paste it into a terminal after the hashid command.
+
+```
+hashid 6515229daf8dbdc8b89fed2e60f107433da5f2cb
+```
+
+(Image 8)
+**image 8** - The results of the hashid command.
+
+I am going to save you some time and tell you that is is in fact SHA-1.  The next thing that we should do to make our lives easier is to create a text file with all of the discovered hashes in it.
+
+(Image 9)
+**image 9** - The text file with all the hashes named hashes.txt
+
+Now we have our hashes and we know what kind of hashes they are, we are ready to start cracking!  We have to build our command for hashcat...
+
+```
+hashcat -a 0 -m 100 hashes.txt /usr/share/wordlists/rockyou.txt --force --potfile-disable
+```
+Let's break down that command: "hashcat" initiates hashcat, "-a 0" specified the attack mode (0 tells hashcat to do a straight hash to hash comparison, and "-m 100" specifies the hash type (100 tells hashcat to do SHA-1 hashes).  The next section specifies the path to your hash file, and then the path to the wordlist comes next.  After this, I usually tack on any other options.  In this case I am using "--force" due to some errors on my Kali VM and "--potfile-disable" so that I will be able to see the cracked passwords in the output and not store them in my potfile.
+
+(Image 10)
+**image 10** - The cracked hashes.
 
 More to come!!!
