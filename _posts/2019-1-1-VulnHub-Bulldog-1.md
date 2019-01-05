@@ -97,4 +97,19 @@ Let's break down that command: "hashcat" initiates hashcat, "-a 0" specified the
 (Image 10)
 **image 10** - The cracked hashes.
 
+Now that we have the passwords to the "Nick" and "Sarah" accounts, let's find out what they go to!  My money is on the Django login page.  Let's try Nick's credentials first and see what we get...
+
+(Image 11)
+**image 11** - Nick's credentials in the login page.
+
+(Image 12)
+**image 1** - We're in!
+
+What was that I remember about the Web Shell saying I need to be authenticated?  Let's check backt there...
+
+(Image 13)
+**image 13** - The now accessible web shell.
+
+
+
 More to come!!!
