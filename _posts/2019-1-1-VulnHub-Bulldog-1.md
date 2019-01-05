@@ -24,7 +24,7 @@ When the Nmap completes, we see that we have two web ports open at port 80 and 8
 (Image 1)
 **Image 1** - The Nmap results.
 
-Lets move on to some quick web "recon"...
+Lets move on to some quick web scanning...
 
 ### Dirb
 Generally when i see something open on port 80, I will fire up a browser and see what I am dealing with...
@@ -80,12 +80,12 @@ hashid 6515229daf8dbdc8b89fed2e60f107433da5f2cb
 ```
 
 (Image 8)
-**image 8** - The results of the hashid command.
+**Image 8** - The results of the hashid command.
 
 I am going to save you some time and tell you that is is in fact SHA-1.  The next thing that we should do to make our lives easier is to create a text file with all of the discovered hashes in it.
 
 (Image 9)
-**image 9** - The text file with all the hashes named hashes.txt
+**Image 9** - The text file with all the hashes named hashes.txt
 
 Now we have our hashes and we know what kind of hashes they are, we are ready to start cracking!  We have to build our command for hashcat...
 
@@ -95,20 +95,71 @@ hashcat -a 0 -m 100 hashes.txt /usr/share/wordlists/rockyou.txt --force --potfil
 Let's break down that command: "hashcat" initiates hashcat, "-a 0" specified the attack mode (0 tells hashcat to do a straight hash to hash comparison, and "-m 100" specifies the hash type (100 tells hashcat to do SHA-1 hashes).  The next section specifies the path to your hash file, and then the path to the wordlist comes next.  After this, I usually tack on any other options.  In this case I am using "--force" due to some errors on my Kali VM and "--potfile-disable" so that I will be able to see the cracked passwords in the output and not store them in my potfile.
 
 (Image 10)
-**image 10** - The cracked hashes.
+**Image 10** - The cracked hashes.  So, my Kali VM had an issue with Hashcat, I kept getting segfaults and it [drove me crazy](https://xkcd.com/290/) to the point where I just went to [Crackstation](https://crackstation.net/) to get what I needed for this blog post.  The syntax above is correct for Hashcat, hopefully your's works.  I would **NOT** reccomend using Crackstation in a corporate environment.
 
-Now that we have the passwords to the "Nick" and "Sarah" accounts, let's find out what they go to!  My money is on the Django login page.  Let's try Nick's credentials first and see what we get...
+### Logging In and Looking Around
+Now that we have the passwords to the "Nick" and "Sarah" accounts, let's find out what they go to!  My money is on the Django login page.  Let's try Sarah's credentials first and see what we get...
 
 (Image 11)
-**image 11** - Nick's credentials in the login page.
+**Image 11** - Sarah's credentials in the login page.
 
 (Image 12)
-**image 1** - We're in!
+**Image 1** - We're in!
 
-What was that I remember about the Web Shell saying I need to be authenticated?  Let's check backt there...
+What was that I remember about the Web Shell saying I need to be authenticated?  Let's check back there...
 
 (Image 13)
-**image 13** - The now accessible web shell.
+**Image 13** - The now accessible web shell.
+
+Boom! We have a nice foothold in our access to the Web Shell.  I will save you some time and tell you that the commands listed are the only commands you can run... at first.  Let's run a few quick commands... 
+
+(Image 14)
+**Image 14** - Running pwd.
+
+(Image 15)
+**Image 15** - Running ls -lart.
+
+One way that you can run multiple commands in linux is to use "&&".  This will run your first command, and then the second.  "Whoami" is not a permitted command in the list, but let's see if we can get it to run by appending it to a valid command...
+
+(Image 16)
+**Image 16** - Successfully appending the "whoami" command.
+
+It works!  We can now run essentially any command we want on the system as the "django" user.  Remember back in Image 15 we saw a "manage.py" script?  That tell me that python is installed on the system.  Also, "echo" is a permitted command.  You see where I am going with this?  Let's use "echo" to create a python script that will create a reverse shell back to us, and take advantage of the "&&" issue to change the permissions on that file, and then run the script...
+
+### Reverse Shell
+There are plenty of publicly available python reverse shells, the one I am using is from [PenTestMonkey](http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet).  My reccomendation is to create a text file with the "echo" command ready to go for each line of the reverse shell.  This makes it simple to copy over to the system through the Web Shell.  Make sure you replace the IP address with your own IP.
+
+(Image 17)
+**Image 17** - The reverse shell, ready to go.
+
+After we echo each line to the "shell.py" file we created, let's "cat" the file to make sure it looks right.
+
+(Image 18)
+**Image 18** - The reverse shell looks good to me!
+
+We need to change the permissions on the "shell.py" file to make it executable, so let's append a command to do that...
+
+(Image 19)
+**Image 19** - Changing the permissions with the "chmod" command.
+
+Let's setup our listener on the system we are attacking from...
+
+```
+nc -nlvp 1234
+```
+
+Now we can go back to the Web Shell and have the system run our malicious python script...
+
+(Image 20)
+**Image 20** - Running the malicious python script.
+
+Let's check on our listener... and we have a reverse shell!  let's run a few quick commands to see who and where we are...
+
+(Image 21)
+**Image 19** - The reverse shell.
+
+## Post-Exploitation
+Now that we are inside the system, we need to look for ways to escalate our privilege and become root!
 
 
 
