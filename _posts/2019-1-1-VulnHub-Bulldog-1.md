@@ -156,11 +156,94 @@ Now we can go back to the Web Shell and have the system run our malicious python
 Let's check on our listener... and we have a reverse shell!  let's run a few quick commands to see who and where we are...
 
 (Image 21)
-**Image 19** - The reverse shell.
+**Image 21** - The reverse shell.
 
 ## Post-Exploitation
 Now that we are inside the system, we need to look for ways to escalate our privilege and become root!
 
+I will save you some time navigating around, the interesting thing to look for is in /home/bulldogadmin.  Navigate to that directory and let's see what is in this directory.  I usually attach "-lart" to my "ls" command so I can see the hidden files and folders and sorted by last modified.  It is handy seeing what the system owner last changed.  Here was see a ".hiddenadmindirectory".
 
+(Image 22)
+**Image 22** - The contents of the bulldogadmin directory.
 
+ What is in there?
+
+(Image 23)
+**Image 23** - The contents of the .hiddenadmindirectory directory.
+
+Here we see a "customPermissionApp" and a note left by an employee of Bulldog Industries.  Let's take a look at the note first.  You can see that Ashley is mentioning "permission stuff" and "working with the Django user account".  This must be the "customPermissionApp" we saw ealrier...
+
+(Image 24)
+**Image 24** - The contents of the note.
+
+Let's go back and read that customPermissionApp, that sounds interesting!
+
+(Image 25)
+**Image 25** - The contents of the customPermissionApp.
+
+Whoa!  I can't read any of that!  Let's see if we can make heads or tails of it with the "strings" command.  Strings will just print the readable characters...
+
+(Image 26)
+**Image 26** - A more readable customPermissionApp.
+
+Ah, that's better!  But wait... What is this?  "SUPERultimatePASSWORDyouCANTget"?  That seems awfully specific...
+
+(Image 27)
+**Image 27** - Possible clear text password stored in the customPermissionApp.
+
+Well I suppose it couldn't hurt to try...
+
+(Image 28)
+**Image 28** - Need a TTY.
+
+Blast!  my evil plan is foiled!  Looks like I need a [TTY](https://stackoverflow.com/questions/4426280/what-do-pty-and-tty-mean).  Luckily there is a [python script](https://netsec.ws/?p=337) to get us a tty!
+
+(Image 29)
+**Image 29** - The python TTY script.
+
+Now that I have a TTY, I can try "sudo su" again.  It prompts for a password, that is a good sign!  Let's enter the password we found in the customPermissionApp... Woo!!!! I am root!
+
+(Image 30)
+**Image 30** - [Sudo make me a sandwhich!](https://xkcd.com/149/)
+
+If you did your enumeration deep enough, you may already know that there is a second way to get root!  Let's go back to our reverse shell that we got in Image 21, so we should be the "django" user again.
+
+(Image 31)
+**Image 31** - Back where we started, with the django account.
+
+Let's take a look at cron, the linux task scheduler.  Change into the "cron.d" directory and take a look at it's contents.
+
+(Image 32)
+**Image 32** - The contents of cron.d.
+
+Here we see a couple of things of interest: mdadm, popularity-contest, and runAV.  Let's pick one of these *almost* at random, runAV.  Let's read the "runAV" file and see what we get.
+
+(Image 33)
+**Image 33** - The contents of the runAV file.
+
+It appears that this file runs every minute, and executes the AVApplication.py in /.hiddenAVDirectory.  Let's investigate that file and see if it will be of use to us.  Let's change into the /.hiddenAVDirectory and look at the permissions on AVApplication.py
+
+(Image 34)
+**Image 34** - The settings of the AVApplication.py file.
+
+it appears that this file is world writeable AND is owned by root!!!  So, to recap: was have a cron job that runs a python script every minute, the python script is world writeable, and it runs it as root.  Let's do some magic!  Remember that python reverse shell from Image 17?  We can repupose that to append to the end of AVApplication.py.  In the real world, we would only append to the end of the file and not overwite it as that could potentially break the system.  Edit the script to make sure it only appends (>>) to AVApplication.py
+
+(Image 35)
+**Image 35** - The modified python reverse shell.
+
+Now we will copy each line so that our commands are echoed to AVApplication.py
+
+(Image 36)
+**Image 36** - The lines from our reverse shell echoed to AVapplication.py
+
+Now we just have to wait one minute for the server to run the cron job.  So we will setup our listener (the same command we used earlier in Image 21) and sit back and let the shells roll in!
+
+(Image 37)
+**Image 37** - [Sudo make me a sandwhich!](https://xkcd.com/149/)
+
+## Reporting
+
+All good penetration tests have one thing in common: good reports.  This is a simplified version of how I would write the Bulldog 1 findings if I were submitting them.
+
+### Finding 1 - 
 More to come!!!
