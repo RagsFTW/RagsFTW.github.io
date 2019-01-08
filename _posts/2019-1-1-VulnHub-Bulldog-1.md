@@ -21,7 +21,7 @@ nmap -vvv -p- -sT -sV 192.168.56.4 --open -oA bulldog_nmap
 ```
 When the Nmap completes, we see that we have two web ports open at port 80 and 8080.  I will save you some time, these are the same.  There are no differences between the sites hosted on the two ports.
 
-![1](images/bulldog/1.png)
+![1](/images/bulldog/1.png)
 **Image 1** - The Nmap results.
 
 Lets move on to some quick web scanning...
