@@ -30,7 +30,8 @@ Lets move on to some quick web scanning...
 ### Dirb
 Generally when i see something open on port 80, I will fire up a browser and see what I am dealing with...
 
-![2](/images/bulldog/2.png
+![2](/images/bulldog/2.png)
+
 **Image 2** - The Bulldog 1 homepage.
 
 In the real world I may not use a directory scanner, they are noisy and in rare instances could cause impacts.  On a VulnHub system, it is OK to "go loud".  Dirb is pretty simple, just give it a target and the path to a world list and you are good to go!
