@@ -82,10 +82,6 @@ Now we have moved out of the realm of scanning and into exploitation!  First thi
 ### Hashcat
 In order to crack these hashes, we first have to do a few things.  The first of which would be to identify the kind of hash we are going to crack.  Using a tool called "hashid", we can identify the hash so we can tell hashcat how to crack the hash.  Copy one of the hashses to your clipboard and then paste it into a terminal after the hashid command.
 
-```
-hashid 6515229daf8dbdc8b89fed2e60f107433da5f2cb
-```
-
 ![8](/images/bulldog/8.png)
 
 **Image 8** - The results of the hashid command.
