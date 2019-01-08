@@ -5,13 +5,13 @@ title: VulnHub - Bulldog 1
 
 A fun [VulnHub](https://www.vulnhub.com/) system, and now my first blog post are in the books!
 
-For this VulnHub system, I chose "[Bulldog 1](https://www.vulnhub.com/entry/bulldog-1,211/)".  Bulldog 1 was created by my friend and colleage [Nick Frichette](https://frichetten.com/). Bulldog 1 was labeled as a "Beginner / Intermediate", making it perfect for someone who is new to penetration testing.  Overall, my impression of Bulldog 1 was positive.  I thought the advertised difficult was accurate: there were things I knew off the top of my head, and there were things I had to Google.  Without further delay, let's get root!
+For this VulnHub system, I chose "[Bulldog 1](https://www.vulnhub.com/entry/bulldog-1,211/)".  Bulldog 1 was created by my friend and colleage [Nick Frichette](https://frichetten.com/). Bulldog 1 was labeled as a "Beginner / Intermediate", making it perfect for someone who is new to penetration testing.  Overall, my impression of Bulldog 1 was positive.  I thought the advertised difficulty was accurate: there were things I knew off the top of my head, and there were things I had to Google.  Without further delay, let's get root!
 
 ## Where To Start
 Tackling a VulnHub machine is always going to be a bit different than a production system at a company, but the methodology is roughly the same.  While there is some debate over the actual steps, they will typically contain the following phases: Recon, Scanning, Exploitation, and Post-Exploitation.  Some may add in phases like scoping or reporting, or have different names for these phases.  
 
 ## Scanning
-Wait? What happened to the Recon phase?  This is one of those things that is different about a VulnHub challenge.  Since I already know what my target is, I don't really have to do recon, and can just move into scanning.  If there were an actual company target, or something I would do professionally, then I would be learning as much as possible about the company and their systems minus any actual network or phyiscal interaction with the systems.
+Wait? What happened to the Recon phase?  This is one of those things that is different about a VulnHub challenge.  Since I already know what my target is, I don't really have to do recon, and can just move into scanning.  If this were an actual company target, or something I would do professionally, then I would be learning as much as possible about the company and their systems minus any actual network or phyiscal interaction with the systems.
 
 ### Nmap
 Nmap is typically the "go-to" first tool when conducting a pen test or a Capture the Flag (CTF).  On my local network, Bulldog 1 recieved an IP address of 192.168.56.4.  So lets get started...
@@ -39,7 +39,7 @@ In the real world I may not use a directory scanner, they are noisy and in rare 
 ```
 dirb http://192.168.56.4 /usr/share/wordlists/dirb/small.txt -r
 ```
-When dirb finihses, we can see that it found a "/admin" directory and a "/dev" directory, so let's check it out!
+When dirb finishes, we can see that it found an "/admin" directory and a "/dev" directory, so let's check it out!
 
 ![3](/images/bulldog/3.png)
 
@@ -68,7 +68,7 @@ Quickly clicking on the Web Shell link we are greated by a page that says we nee
 
 At the bottom of the page we saw email addresses, or should I say usernames!  This is perfect for making a list of potential usernames to use in our attacks.
 
-At this point we have some options: 1) brute force the login page, 2) crack the users passwords.  Let's go with option 2.  "But i don't have and passwords!" you may say.  But if we take a look at the source of the /dev page we will see some hashes!!!
+At this point we have some options: 1) brute force the login page, 2) crack the users passwords.  Let's go with option 2.  "But I don't have and passwords!" you may say.  But if we take a look at the source of the /dev page we will see some hashes!!!
 
 ![7](/images/bulldog/7.png)
 
@@ -90,14 +90,14 @@ I am going to save you some time and tell you that is is in fact SHA-1.  The nex
 
 ![9](/images/bulldog/9.png)
 
-**Image 9** - The text file with all the hashes named hashes.txt
+**Image 9** - The text file with all the hashes named hashes.txt.
 
 Now we have our hashes and we know what kind of hashes they are, we are ready to start cracking!  We have to build our command for hashcat...
 
 ```
 hashcat -a 0 -m 100 hashes.txt /usr/share/wordlists/rockyou.txt --force --potfile-disable
 ```
-Let's break down that command: "hashcat" initiates hashcat, "-a 0" specified the attack mode (0 tells hashcat to do a straight hash to hash comparison, and "-m 100" specifies the hash type (100 tells hashcat to do SHA-1 hashes).  The next section specifies the path to your hash file, and then the path to the wordlist comes next.  After this, I usually tack on any other options.  In this case I am using "--force" due to some errors on my Kali VM and "--potfile-disable" so that I will be able to see the cracked passwords in the output and not store them in my potfile.
+Let's break down that command: "hashcat" initiates hashcat, "-a 0" specified the attack mode (0 tells hashcat to do a straight hash to hash comparison) and "-m 100" specifies the hash type (100 tells hashcat to do SHA-1 hashes).  The next section specifies the path to your hash file, and then the path to the wordlist comes next.  After this, I usually tack on any other options.  In this case I am using "--force" due to some errors on my Kali VM and "--potfile-disable" so that I will be able to see the cracked passwords in the output and not store them in my potfile.
 
 ![10](/images/bulldog/10.png)
 
@@ -112,7 +112,7 @@ Now that we have the passwords to the "Nick" and "Sarah" accounts, let's find ou
 
 ![12](/images/bulldog/12.png)
 
-**Image 1** - We're in!
+**Image 12** - We're in!
 
 What was that I remember about the Web Shell saying I need to be authenticated?  Let's check back there...
 
@@ -136,7 +136,7 @@ One way that you can run multiple commands in linux is to use "&&".  This will r
 
 **Image 16** - Successfully appending the "whoami" command.
 
-It works!  We can now run essentially any command we want on the system as the "django" user.  Remember back in Image 15 we saw a "manage.py" script?  That tell me that python is installed on the system.  Also, "echo" is a permitted command.  You see where I am going with this?  Let's use "echo" to create a python script that will create a reverse shell back to us, and take advantage of the "&&" issue to change the permissions on that file, and then run the script...
+It works!  We can now run essentially any command we want on the system as the "django" user.  Remember back in Image 15 we saw a "manage.py" script?  That tells me that python is installed on the system.  Also, "echo" is a permitted command.  You see where I am going with this?  Let's use "echo" to create a python script that will create a reverse shell back to us, and take advantage of the "&&" issue to change the permissions on that file, and then run the script...
 
 ### Reverse Shell
 There are plenty of publicly available python reverse shells, the one I am using is from [PenTestMonkey](http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet).  My reccomendation is to create a text file with the "echo" command ready to go for each line of the reverse shell.  This makes it simple to copy over to the system through the Web Shell.  Make sure you replace the IP address with your own IP.
@@ -190,7 +190,7 @@ I will save you some time navigating around, the interesting thing to look for i
 
 **Image 23** - The contents of the .hiddenadmindirectory directory.
 
-Here we see a "customPermissionApp" and a note left by an employee of Bulldog Industries.  Let's take a look at the note first.  You can see that Ashley is mentioning "permission stuff" and "working with the Django user account".  This must be the "customPermissionApp" we saw ealrier...
+Here we see a "customPermissionApp" and a note left by an employee of Bulldog Industries.  Let's take a look at the note first.  You can see that Ashley is mentioning "permission stuff" and "working with the Django user account".  This must be the "customPermissionApp" we saw earlier...
 
 ![24](/images/bulldog/24.png)
 
@@ -220,7 +220,7 @@ Well I suppose it couldn't hurt to try...
 
 **Image 28** - Need a TTY.
 
-Blast!  my evil plan is foiled!  Looks like I need a [TTY](https://stackoverflow.com/questions/4426280/what-do-pty-and-tty-mean).  Luckily there is a [python script](https://netsec.ws/?p=337) to get us a tty!
+Blast!  My evil plan is foiled!  Looks like I need a [TTY](https://stackoverflow.com/questions/4426280/what-do-pty-and-tty-mean).  Luckily there is a [python script](https://netsec.ws/?p=337) to get us a tty!
 
 ![29](/images/bulldog/29.png)
 
@@ -256,7 +256,7 @@ It appears that this file runs every minute, and executes the AVApplication.py i
 
 **Image 34** - The settings of the AVApplication.py file.
 
-it appears that this file is world writeable AND is owned by root!!!  So, to recap: was have a cron job that runs a python script every minute, the python script is world writeable, and it runs it as root.  Let's do some magic!  Remember that python reverse shell from Image 17?  We can repupose that to append to the end of AVApplication.py.  In the real world, we would only append to the end of the file and not overwite it as that could potentially break the system.  Edit the script to make sure it only appends (>>) to AVApplication.py
+it appears that this file is world writeable AND is owned by root!!!  So, to recap: was have a cron job that runs a python script every minute, the python script is world writeable, and it runs it as root.  Let's do some magic!  Remember that python reverse shell from Image 17?  We can repurpose that to append to the end of AVApplication.py.  In the real world, we would only append to the end of the file and not overwite it as that could potentially break the system.  Edit the script to make sure it only appends (>>) to AVApplication.py
 
 ![35](/images/bulldog/35.png)
 
@@ -281,12 +281,12 @@ All good penetration tests have one thing in common: good reports.  This is a *v
 ### Finding 1 - Password Hash Storage
 __Severity__: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N - High
 
-__Summary__: it was found that Bulldog Industries was storing password hashes in the source of the /dev page.  it is recommended that Bulldog Industries immediately remove these hashes and change the passwords of the associated users.
+__Summary__: It was found that Bulldog Industries was storing password hashes in the source of the /dev page.  It is recommended that Bulldog Industries immediately remove these hashes and change the passwords of the associated users.
 
 ### Finding 2 - Weak Passwords
 __Severity__: High
 
-__Summary__: It was found that the password hashes discovered in Finding 1 were easily cracked.  These passwords did not follow any sort of industry standard for password complexity and could be easily guessed by an attacker as they were based on the name of the company.  it is recommended that the passwords be immediately changed to passwords that meet an industry standard password complexity policy.
+__Summary__: It was found that the password hashes discovered in Finding 1 were easily cracked.  These passwords did not follow any sort of industry standard for password complexity and could be easily guessed by an attacker as they were based on the name of the company.  It is recommended that the passwords be immediately changed to passwords that meet an industry standard password complexity policy.
 
 ### Finding 3 - Improperly Configured Web Shell
 __Severity__: CVSS:3.0/AV:N/AC:L/PR:L/UI:N/S:C/C:L/I:N/A:N - Medium
