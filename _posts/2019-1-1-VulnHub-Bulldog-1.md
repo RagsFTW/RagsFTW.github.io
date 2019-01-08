@@ -243,7 +243,34 @@ Now we just have to wait one minute for the server to run the cron job.  So we w
 
 ## Reporting
 
-All good penetration tests have one thing in common: good reports.  This is a simplified version of how I would write the Bulldog 1 findings if I were submitting them.
+All good penetration tests have one thing in common: good reports.  This is a *very* simplified version of how I would write the Bulldog 1 findings if I were submitting them.
 
-### Finding 1 - 
-More to come!!!
+### Finding 1 - Password Hash Storage
+__Severity__: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N - High
+__Summary__: it was found that Bulldog Industries was storing password hashes in the source of the /dev page.  it is recommended that Bulldog Industries immediately remove these hashes and change the passwords of the associated users.
+
+### Finding 2 - Weak Passwords
+__Severity__: High
+__Summary__: It was found that the password hashes discovered in Finding 1 were easily cracked.  These passwords did not follow any sort of industry standard for password complexity and could be easily guessed by an attacker as they were based on the name of the company.  it is recommended that the passwords be immediately changed to passwords that meet an industry standard password complexity policy.
+
+### Finding 3 - Improperly Configured Web Shell
+__Severity__: CVSS:3.0/AV:N/AC:L/PR:L/UI:N/S:C/C:L/I:N/A:N - Medium
+__Summary__: The web shell provided to Bulldog Industries employees permits the execution of forbidden commands.  Coupled with the weak passwords discovered in Finding 2, this could allow a remote attacker to run malicious commands on the system.  It is recommended that Bulldog Industries implement fixes to limit the commands that could be run on the web shell.
+
+### Finding 4 - Clear Text Password
+__Severity__: CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:N/A:N - Medium
+__Summary__: A clear text password for the root user was found in the "customPermissionApp".  Coupled with the previous findings, a malicious attacker with low privileges could execute commands as the root user.  It is recommended that Bulldog Industries not store or use passwords in this fashion.
+
+### Finding 5 - Improperly Configured Cron Jobs
+__Severity__: CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:N/A:N - Medium
+__Summary__: A cron job was found to be executing a script as root that was world writeable.  This would allow a low priviliged attacker to escalate to the root user.  It is recommended that Bulldog Industries adjust the permissions on the AVApplication.py file and conduct a further audit of other cron jobs.
+
+### Attack Chain
+Nmap yielded port 80 > Password hashed found in page source > Hashes cracked > Logged in to Django as "Sarah" > Gained access to the web shell > Created reverse shell > Found root password in customPermissionApp > Elevated privileges to root.
+
+OR
+
+Nmap yielded port 80 > Password hashed found in page source > Hashes cracked > Logged in to Django as "Sarah" > Gained access to the web shell > Created reverse shell > Found cron job that ran a root-owned and world writeable file > Edited the AVApplication.py file to create a root reverse shell.
+
+## Conclusion
+I hope you enjoyed the write up and the system!  Feel free to reach out to me on LinkedIn with any questions!
