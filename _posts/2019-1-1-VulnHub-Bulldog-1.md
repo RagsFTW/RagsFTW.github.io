@@ -17,7 +17,7 @@ Wait? What happened to the Recon phase?  This is one of those things that is dif
 Nmap is typically the "go-to" first tool when conducting a pen test or a Capture the Flag (CTF).  On my local network, Bulldog 1 recieved an IP address of 192.168.56.4.  So lets get started...
 
 ```
-nmap -vvv -p- -sT -sV 192.168.56.4  --open -oA bulldog_nmap
+nmap -vvv -p- -sT -sV 192.168.56.4 --open -oA bulldog_nmap
 ```
 When the Nmap completes, we see that we have two web ports open at port 80 and 8080.  I will save you some time, these are the same.  There are no differences between the sites hosted on the two ports.
 
