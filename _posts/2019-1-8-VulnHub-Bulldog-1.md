@@ -139,7 +139,7 @@ One way that you can run multiple commands in linux is to use "&&".  This will r
 It works!  We can now run essentially any command we want on the system as the "django" user.  Remember back in Image 15 we saw a "manage.py" script?  That tells me that python is installed on the system.  Also, "echo" is a permitted command.  You see where I am going with this?  Let's use "echo" to create a python script that will create a reverse shell back to us, and take advantage of the "&&" issue to change the permissions on that file, and then run the script...
 
 ### Reverse Shell
-There are plenty of publicly available python reverse shells, the one I am using is from [PenTestMonkey](http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet).  My reccomendation is to create a text file with the "echo" command ready to go for each line of the reverse shell.  This makes it simple to copy over to the system through the Web Shell.  Make sure you replace the IP address with your own IP.
+There are plenty of publicly available python reverse shells, the one I am using is from [PenTestMonkey](http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet).  My recomendation is to create a text file with the "echo" command ready to go for each line of the reverse shell.  This makes it simple to copy over to the system through the Web Shell.  Make sure you replace the IP address with your own IP.
 
 ![17](/images/bulldog/17.png)
 
