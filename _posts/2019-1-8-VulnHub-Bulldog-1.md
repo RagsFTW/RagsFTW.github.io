@@ -256,7 +256,7 @@ It appears that this file runs every minute, and executes the AVApplication.py i
 
 **Image 34** - The settings of the AVApplication.py file.
 
-it appears that this file is world writeable AND is owned by root!!!  So, to recap: was have a cron job that runs a python script every minute, the python script is world writeable, and it runs it as root.  Let's do some magic!  Remember that python reverse shell from Image 17?  We can repurpose that to append to the end of AVApplication.py.  In the real world, we would only append to the end of the file and not overwite it as that could potentially break the system.  Edit the script to make sure it only appends (>>) to AVApplication.py
+it appears that this file is world writeable AND is owned by root!!!  So, to recap: we have a cron job that runs a python script every minute, the python script is world writeable, and it runs it as root.  Let's do some magic!  Remember that python reverse shell from Image 17?  We can repurpose that to append to the end of AVApplication.py.  In the real world, we would only append to the end of the file and not overwite it as that could potentially break the system.  Edit the script to make sure it only appends (>>) to AVApplication.py
 
 ![35](/images/bulldog/35.png)
 
