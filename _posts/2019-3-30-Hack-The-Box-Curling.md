@@ -5,7 +5,7 @@ title: Hack The Box - Curling
 
 Another [Hack The Box](https://www.hackthebox.eu/) system is in the books!
 
-For this Hack The Box (HTB) system, I chose "Curling".  Curling was labeled as a "easy to medium".  Overall, my impression of Curling was positive.  I thought the advertised difficulty was accurate: there were things I knew off the top of my head, there were things I had to Google, and some I learned recently from my colleague [Rich Mich](https://twitter.com/0xm1rch?lang=en).  Without further delay, let's get root.txt!
+For this Hack The Box (HTB) system, I chose "Curling".  Curling was labeled as a "easy to medium".  Overall, my impression of Curling was positive.  I thought the advertised difficulty was accurate: there were things I knew off the top of my head, there were things I had to Google, and some I learned recently from my colleague [Rich Mirch](https://twitter.com/0xm1rch?lang=en).  Without further delay, let's get root.txt!
 
 ## Where To Start
 Tackling a HTB machine is always going to be a bit different than a production system at a company, but the methodology is roughly the same.  While there is some debate over the actual steps, they will typically contain the following phases: Recon, Scanning, Exploitation, and Post-Exploitation.  Some may add in phases like scoping or reporting, or have different names for these phases.  
