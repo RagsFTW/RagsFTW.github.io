@@ -20,7 +20,7 @@ Nmap is typically the "go-to" first tool when conducting a pen test or a Capture
 
 **Image 1** - The Nmap command and results.
 
-The only ports that are open are port 22 (SSH), port 80 (web), and port 3000 which appears to be being used as an alternative HTTP port.  Let’s see what we have on the web port (80) first and fire up Firefox…
+The only ports that are open are port 22 (SSH), port 80 (HTTP), and port 3000 which appears to be being used as an alternative HTTP port.  Let’s see what we have on the web port (80) first and fire up Firefox…
 
 ### Manual Information Gathering
 ![2](/images/help/2.png)
@@ -121,7 +121,7 @@ From the results above, we can see that there is “/support” directory on the
 
 **Image 17** - A login page for “HelpDeskZ”.
 
-What we have discovered is a login page for an application called “HelpDeskZ”.  Normally, the first thing I would do is head over to CVE Details and see if i could find any known vulnerabilities for this application.  However, since I have some credentials to test, I am going to go that route first.
+What we have discovered is a login page for an application called “HelpDeskZ”.  Normally, the first thing I would do is head over to CVE Details and see if I could find any known vulnerabilities for this application.  However, since I have some credentials to test, I am going to go that route first.
 
 ![18](/images/help/18.png)
 
@@ -299,17 +299,17 @@ __Severity__: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N - High
 
 __Summary__: It was found that the target system was hosting a page where unauthenticated users could make anonymous requests for sensitive information  It is recommended that system admins require authentication to make requests, or to remove the functionality if it is no longer needed.
 
-### Finding 1 - Weak Password
+### Finding 2 - Weak Password
 __Severity__: High
 
 __Summary__: It was found that the “helpme@helpme.com” account had a weak password.  It is recommended that system admins implement a strong password policy and reset the password on the account in question.  It is also suggested that logs be reviewed for unusual activity with this account.
 
-### Finding 1 - Outdated Web Application - HelpDeskZ
+### Finding 3 - Outdated Web Application - HelpDeskZ
 __Severity__: CVSS:3.0/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:N/A:N - High
 
 __Summary__: It was found that HelpDeskZ was vulnerable to a shell upload attack, specifically PHP shells  It is recommended that system admins implement filtering to limit the types of files that can be uploaded.  HelpDeskZ no longer appears to be supported by the manufacturer as the last updates were made in 2015.
 
-### Finding 1 - Outdated Linux Kernel (CVE-2017-16995)
+### Finding 4 - Outdated Linux Kernel (CVE-2017-16995)
 __Severity__: CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H - High
 
 __Summary__: It was found that the target system was vulnerable to a local privilege escalation attack documented in CVE-2017-16995.  It is recommended that system admins update the system so that it is no longer susceptible to the vulnerability.
