@@ -1,0 +1,273 @@
+---
+layout: post
+title: text
+---
+
+Another [Hack The Box](https://www.hackthebox.eu/) system is in the books!
+
+![1](/images/postman/Title.png)
+
+For this Hack The Box (HTB) system, I chose “Postman".  Postman was labeled as “Easy".  Overall, my impression of Postman was positive.  I thought the advertised difficulty was a little off (for me anyway) as there were many things I did not know about the vulnerable application.  Without further delay, let's get root.txt!
+
+## Where To Start
+Tackling a HTB machine is always going to be a bit different than a production system at a company or customer location, but the methodology is roughly the same.  While there is some debate over the actual steps, they will typically contain the following phases: Recon, Scanning, Exploitation, and Post-Exploitation.  Some may add in phases like scoping or reporting, or have different names for these phases.  
+
+## Scanning
+Wait? What happened to the Recon phase?  This is one of those things that is different about a HTB challenge.  Since I already know what my target is, I don't really have to do recon, and can just move into scanning.  If there were an actual company target, or something I would do professionally, then I would be learning as much as possible about the company and their systems minus any actual network or physical interaction with the systems.
+
+### Nmap
+Nmap is typically the "go-to" first tool when conducting a pen test or a Capture the Flag (CTF).  Our target has an IP address of 10.10.10.160.  So let's get started…
+
+![1](/images/postman/1.png)
+
+**Image 1** - The Nmap command and preliminary results.
+
+![2](/images/postman/2.png)
+
+**Image 2** - The final Nmap results.
+
+We have several ports open: 22, 80, 6379, and 10000 (as well as several filtered ports).
+
+Port 6379 (Redis) immediately catches my eye and has many known vulnerabilities.  Let’s confirm with telnet that it is indeed Redis.
+
+![3](/images/postman/3.png)
+
+**Image 3** - Using telnet to connect to the Redis server.
+
+In the image above, we ran the “info” command against Redis and confirmed that this is indeed a Redis server.  I found this [site](https://redis.io/commands) to be full of commands that can be run against Redis.
+
+After much trial and error, I found an exploit that is fairly well documented and looks like it will work!
+
+In this exploit, we can overwrite the Private SSH Key that the redis user employs.
+
+This exploit is documented in a few places:
+[Packet Storm](https://packetstormsecurity.com/files/134200/Redis-Remote-Command-Execution.html)
+[Victor Zhu](https://medium.com/@Victor.Z.Zhu/redis-unauthorized-access-vulnerability-simulation-victor-zhu-ac7a71b2e419)
+[Himanshu Sharma](https://www.google.com/books/edition/Kali_Linux_An_Ethical_Hacker_s_Cookbook/6RhKDwAAQBAJ?hl=en&gbpv=1&bsq=redis&authuser=0)
+
+Let’s walk through this exploit.  First, we need to create our own SSH key pair.
+
+![4](/images/postman/4.png)
+
+**Image 4** - Creating a SSH key pair.
+
+As shown in Image 4, our new keys were created in /root/.ssh.  Let’s move there and take a look at our files.
+
+![5](/images/postman/5.png)
+
+**Image 5** - The newly created SSH key pair.
+
+Per the exploit instuctions, we need to add some “padding” to our public key and we will pipe that to a text file called “temp.txt”
+
+![6](/images/postman/6.png)
+
+**Image 6** - The “padded” temp.txt which contains the public key.
+
+We now have 3 files: our private key, our public key, and the temp.txt file.  Let’s move those to our working directory for everything we are doing with Postman.
+
+![7](/images/postman/7.png)
+
+**Image 7** - The moved files.
+
+## Exploitation
+
+To recap, we have created a SSH key pair and are ready to upload it to the Redis server and overwrite the redis user’s key.
+
+To upload the key, we will cat the temp.txt file and pipe it in a redis-cli command.  If you do not have the redis-cli package, you can install it with “apt-get install redis-tools”.  We can confirm that the key was overwritten by running the “get s-key” command once we have connected to Redis with the redis-cli.
+
+![8](/images/postman/8.png)
+
+**Image 8** - Piping the temp.txt file to overwrite the Redis s-key.
+
+Following the exploit documentation, we will then set the current directory in the redis-cli /var/lib/redis/.ssh.
+
+![9](/images/postman/9.png)
+
+**Image 9** - Setting the directory in the redis-cli.
+
+Following the exploit documentation, we will then set the dbfilename to the authorized_keys file.
+
+![10](/images/postman/10.png)
+
+**Image 10** - Setting the dbfilename in the redis-cli.
+
+We can confirm that the “authorized_keys” file was set properly by running the “CONFIG GET dbfilename” command in the redis-cli.
+
+![11](/images/postman/11.png)
+
+**Image 11** - Confirming the dbfilename in the redis-cli.
+
+Now we need to save our changes in the redis-cli.
+
+![12](/images/postman/12.png)
+
+**Image 12** - Saving the changes in the redis-cli.
+
+Now that our key is written to the server, we will now be able to SSH in as the “redis” user.
+
+![13](/images/postman/13.png)
+
+**Image 13** - SSH’ing (I think that’s a word) in as the “redis” user.
+
+I usually poke around the system for a few basic things: current user, kernel version, etc.  But I am in the system right?  I should be able to (maybe… hopefully…) see the user.txt file and plug that into HTB?
+
+![14](/images/postman/14.png)
+
+**Image 14** - Exploring basic items in the server.
+
+Unfortunately, I could not read the user.txt file.  Looks like I need to become “Matt”.  So let’s do some more exploring.  One of the things to look for are backup files as they can be very fruitful!  And this system is bearing fruit!  We found a id_rsa.bak file which is a backup of a SSH private key.
+
+![15](/images/postman/15.png)
+
+**Image 15** - Locating the backup SSH private key.
+
+We copy the contents of id_rsa.bak into a text editor on our local system.
+
+![16](/images/postman/16.png)
+
+**Image 16** - The copied content of id_rsa.bak.
+
+We will rename the “id_rsa.bak” file to “id_rsa”.  In order to crack this key, we will use John The Ripper.  But first, we need to change the “id_rsa” file into a consumable format for John to use.  To do this we will use the “ssh2john.py” python script already in Kali, and send the output to “crack_me.txt”
+
+![17](/images/postman/17.png)
+
+**Image 17** - Running the ssh2john.py python script.
+
+Let’s check “crack_me.txt”...
+
+![18](/images/postman/18.png)
+
+**Image 18** - The contents of “crack_me.txt”.
+
+Now that we have the SSH private key in a format John can use, it is time to get cracking!
+
+![19](/images/postman/19.png)
+
+**Image 19** - The output of John.
+
+Awesome!  We can see that the password is “postman101”.  Side note: John was taking an eternity to crack this, so on a hunch I did a grep of rockyou.txt for “post” to create a smaller list to try.
+
+Let’s try to SSH in as “matt”.
+
+![20](/images/postman/20.png)
+
+**Image 20** - SSH’ing in as “matt”.
+
+Uh oh!  Looks like “matt” cannot SSH in.  We can confirm this by looking at the “sshd_config” file on the system.  Let’s get back onto the server using method from earlier to gain access as the “redis” user.
+
+![21](/images/postman/21.png)
+
+**Image 21** - The “sshd_config” file is readable.
+
+Scrolling through the “sshd_config” file, we see that Matt is in fact denied SSH access.
+
+![22](/images/postman/22.png)
+
+**Image 22** - The “sshd_config” file.
+
+At this point, I tried to change users in the session I had as “redis” but was being denied with a bad password.  I had to take a step back.  Looking back at the “crack_me.txt file from Image 18, I noticed something interesting.  It looks like this is “sshng” and not ssh!
+
+![23](/images/postman/23.png)
+
+**Image 23** - The contents of “crack_me.txt”.
+
+Digging into this more, there is a [sshng2john.py](https://github.com/stricture/hashstack-server-plugin-jtr/blob/master/scrapers/sshng2john.py) script that can make this consumable for John.  Very sneaky Mr. Postman creator!!!
+
+![24](/images/postman/24.png)
+
+**Image 24** - Downloading the sshng2john.py script.
+
+Next, we will repeat the step from Image 17, but with sshng2john.py.
+
+![25](/images/postman/25.png)
+
+**Image 25** - Running the sshng2john.py python script.
+
+Next, we will repeat the step from Image 19, and hopefully get a good password this time!
+
+![26](/images/postman/26.png)
+
+**Image 26** - The output of John.
+
+Awesome!  We can see that the actual password is “computer2008”.  We can now change users from Redis to Matt with our cracked password.
+
+![27](/images/postman/27.png)
+
+**Image 27** - Changing users from “redis” to “Matt”.
+
+Let’s go through and grab the user.txt file for some HTB glory!
+
+![28](/images/postman/28.png)
+
+**Image 28** - The contents of user.txt.
+
+## Post-Exploitation
+
+Now that we have at least locked down a low privileged user account, we are ready to move on to root!
+
+Looking back at Image 2, we see that port 10000 is open as well and is running Webmin 1.910.  Let’s open up the browser to that and check out what is going on.
+
+![29](/images/postman/29.png)
+
+**Image 29** - The Webmin login page.
+
+Using what we already have, let’s see if Matt and his password work here.
+
+![30](/images/postman/30.png)
+
+**Image 30** - The Webmin login page with Matt’s credentials.
+
+Let’s all let out that collective sigh as we see that Matt’s credentials work and let us into Webmin.  We see that Nmap was correct and that Webmin is at version 1.910.
+
+![31](/images/postman/31.png)
+
+**Image 31** - The Webmin dashboard.
+
+Poking around Webmin did not give me much, I have the ability to do some package updates, but nothing else.  Let’s run this through searchsploit real quick.
+
+![32](/images/postman/32.png)
+
+**Image 32** - The searchsploit results.
+
+What is this?  A package updates vulnerability for version 1.910?  We have to try that out!
+
+Let’s fire up Metasploit (per the results from searchsploit).  I located the exploit needed and loaded it up.  Below are the options I used, being sure to change the “SSL” variable to “true” because Webmin is running on HTTPS (Image 31) and entering in Matt’s credentials.
+
+![33](/images/postman/33.png)
+
+**Image 33** - The Metasploit options.
+
+We run the exploit, become root, and grab the flag!
+
+![34](/images/postman/34.png)
+
+**Image 34** - Victory!
+
+## Reporting
+All good penetration tests have one thing in common: good reports.  This is a *very* simplified version of how I would write the Postman findings if I were submitting them.
+
+### Finding 1 - Unauthenticated Redis Server
+__Severity__: CVSS v3.1 Vector: AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H - Critical
+
+__Summary__: It was found that the Redis server could be accessed without any authentication.  The assessor was able to access, change, and remove data and files.  It is recommended that Postman administrators employ an authentication mechanism to Redis.
+
+### Finding 2 - Unsecured SSH Private Key
+__Severity__: High
+
+__Summary__: It was found that a SSH private key was stored on the system without sufficient protections.  The assessor was able to extract the password from the key and use it in furthering their attacks.  It is recommended that SSH keys be stored in a secure manner.
+
+### Finding 3 - Password Reuse
+__Severity__: High
+
+__Summary__: It was found that the “Matt” user had the same password in their SSH key as they did for Webmin access.  The assessor used this access to exploit Webmin and gain root access.  It is recommended that the “Matt” user change both the SSH password and the Webmin password to something unique.
+
+### Finding 4 - Outdated Webmin
+__Severity__: CVSS:2.0/AV:N/AC:L/Au:N/C:P/I:P/A:P - High
+
+__Summary__: It was found that the Postman server was using an outdated version of Webmin.  The assessor was able to use a publicly available exploit to gain root access  It is recommended that Postman administrators update Webmin to patch this vulnerability.
+
+### Attack Chain
+Nmap scan > port 6379 (Redis) > no authentication on Redis > can overwrite SSH keys for the “redis” user > create “attackers” SSH key > overwrite “redis” key > access the system as “redis” > copied content of id_rsa.bak > extracted password from key > changed to the “Matt” user with extracted password > captured user.txt > accessed Webmin with Matt’s credentials > Metasploit exploit for Webmin 1.910 > root access > captured root.txt
+
+## Conclusion
+I hope you enjoyed the write up and the system!  Feel free to reach out to me on [LinkedIn](https://www.linkedin.com/in/aaron-ragusa-3258ba174/) with any questions!
