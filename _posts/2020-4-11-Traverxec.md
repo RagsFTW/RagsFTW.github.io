@@ -5,7 +5,7 @@ title: Hack The Box - Traverxec
 
 Another [Hack The Box](https://www.hackthebox.eu/) system is in the books!
 
-![Traverxec](/images/traverxec/Title.png)
+![Traverxec](/images/traverxec/Title.PNG)
 
 For this Hack The Box (HTB) system, we chose “Traverxec".  Who is this “we” you speak of?  This HTB system was used as a training and mentoring aid for two of our co-workers who wanted to increase their offensive knowledge.
 
