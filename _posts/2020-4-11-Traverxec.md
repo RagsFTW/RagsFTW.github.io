@@ -70,7 +70,7 @@ Now that we have an “original” copy and an “edit” copy, let’s take a l
 
 ![9](/images/traverxec/9.png)
 
-**Image 9** - Editing the exploit in nano, just to make ]@0xm1rch](https://twitter.com/0xm1rch) and Scott S. twitch).
+**Image 9** - Editing the exploit in nano (just to make [@0xm1rch](https://twitter.com/0xm1rch) and Scott S. twitch).
 
 It looks like there is nothing to edit here as we will feed our malicious code into the command itself!  Easy Peasey!
 
