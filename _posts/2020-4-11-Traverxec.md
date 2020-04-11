@@ -9,7 +9,7 @@ Another [Hack The Box](https://www.hackthebox.eu/) system is in the books!
 
 For this Hack The Box (HTB) system, we chose “Traverxec".  Who is this “we” you speak of?  This HTB system was used as a training and mentoring aid for two of our co-workers who wanted to increase their offensive knowledge.  I was very excited to have the opportunity of passing on my knowledge to others!!!
 
-Traverxec was labeled as an “easy" system.  Overall, my impressions of Traverxec were positive.  We thought the advertised difficulty was accurate: there were things we knew off the top of our heads, and there were things we had to Google.  Without further delay, let's get root.txt!
+Traverxec was labeled as an “easy" system.  Overall, our impressions of Traverxec were positive.  We thought the advertised difficulty was accurate: there were things we knew off the top of our heads, and there were things we had to Google.  Without further delay, let's get root.txt!
 
 ## Where To Start
 Tackling a HTB machine is always going to be a bit different than a production system at a company or customer location, but the methodology is roughly the same.  While there is some debate over the actual steps, they will typically contain the following phases: Recon, Scanning, Exploitation, and Post-Exploitation.  Some may add in phases like scoping or reporting, or have different names for these phases.  
