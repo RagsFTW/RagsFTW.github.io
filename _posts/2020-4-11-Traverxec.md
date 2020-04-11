@@ -210,7 +210,7 @@ We decided to take the line of code out of the script and run it by itself.  By 
 
 **Image 30** - Running the sudo and journalctl commands manually.
 
-.This is perfect, because journalctl didn’t terminate, we should be able to test what was in the GTFOBins entry, and escape to a root shell.
+This is perfect, because journalctl didn’t terminate, we should be able to test what was in the GTFOBins entry, and escape to a root shell.
 
 ![31](/images/traverxec/31.png)
 
