@@ -236,7 +236,7 @@ __Severity__: High
 __Summary__: It was found that a SSH private key was stored on the system without sufficient protections. The assessor was able to extract the password from the key and use it in furthering their attacks. It is recommended that SSH keys be stored in a secure manner.
 
 ### Finding 3 - Journalctl Run With Sudo
-__Severity__: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:L/A:N - Critical
+__Severity__: CVSS:3.0/AV:L/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H - High
 
 __Summary__: It was found that the user “david” was able to run the journalctl command with sudo privileges.  The assessors were able to escalate their privileges to root.  It is recommended that system administrators remove this sudo permission and audit the remaining sudo permissions.
 
