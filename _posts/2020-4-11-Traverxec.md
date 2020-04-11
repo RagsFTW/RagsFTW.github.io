@@ -7,7 +7,7 @@ Another [Hack The Box](https://www.hackthebox.eu/) system is in the books!
 
 ![Traverxec](/images/traverxec/Title.PNG)
 
-For this Hack The Box (HTB) system, we chose “Traverxec".  Who is this “we” you speak of?  This HTB system was used as a training and mentoring aid for two of our co-workers who wanted to increase their offensive knowledge.
+For this Hack The Box (HTB) system, we chose “Traverxec".  Who is this “we” you speak of?  This HTB system was used as a training and mentoring aid for two of our co-workers who wanted to increase their offensive knowledge.  I was very excited to have the opportunity of passing on my knowledge to others!!!
 
 Traverxec was labeled as an “easy" system.  Overall, my impressions of Traverxec were positive.  We thought the advertised difficulty was accurate: there were things we knew off the top of our heads, and there were things we had to Google.  Without further delay, let's get root.txt!
 
