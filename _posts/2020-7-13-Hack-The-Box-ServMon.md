@@ -42,7 +42,7 @@ We can see above, in image 4, that anonymous FTP is allowed.  Let’s fire up Fi
 
 **Image 5** - The FileZilla window and contents of the FTP directory.
 
-In image 5 we see that there are two folders, one for “Nadine” and one for “Nathan”.  Let’s dig into each folder and hope for some juicy information.  We will take a look at Nadine first:
+In Image 5 we see that there are two folders, one for “Nadine” and one for “Nathan”.  Let’s dig into each folder and hope for some juicy information.  We will take a look at Nadine first:
 
 ![6](/images/servmon/6.png)
 
