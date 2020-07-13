@@ -36,7 +36,7 @@ Above, in Image 2, we see several ports open.  There is a lot of attack surface 
 
 **Image 4** - The new Nmap results.
 
-We can see above, in image 4, that anonymous FTP is allowed.  Let’s fire up FileZilla and see what that gives us.  We will connect to the target using a username and password of “anonymous”.
+We can see above, in Image 4, that anonymous FTP is allowed.  Let’s fire up FileZilla and see what that gives us.  We will connect to the target using a username and password of “anonymous”.
 
 ![5](/images/servmon/5.png)
 
@@ -78,7 +78,7 @@ This is interesting, we see that there is a reference to NVMS.  Let’s do a qui
 
 **Image 11** - Google results for “NVMS”.
 
-If we look back at image 2, we will see that port 80 was open.  Let’s fire up the browser and see what is there.
+If we look back at Image 2, we will see that port 80 was open.  Let’s fire up the browser and see what is there.
 
 ![12](/images/servmon/12.png)
 
