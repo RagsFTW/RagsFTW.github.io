@@ -5,7 +5,7 @@ title: Hack The Box - ServMon
 
 Another [Hack The Box](https://www.hackthebox.eu/) system is in the books!
 
-![Title](/images/servmon/Title.png)
+![Title](/images/servmon/Title.PNG)
 
 For this Hack The Box (HTB) system, I chose “ServMon".  Without further delay, let's get root.txt!
 
