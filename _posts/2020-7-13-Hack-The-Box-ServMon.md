@@ -26,7 +26,7 @@ Nmap is typically the "go-to" first tool when conducting a pen test or a Capture
 
 **Image 2** - The Nmap results.
 
-Above, in image 2, we see several ports open.  There is a lot of attack surface here!  Let’s dig a little deeper with Nmap and run it with the “-A” flag for service enumeration, os enumeration, and script scanning.
+Above, in Image 2, we see several ports open.  There is a lot of attack surface here!  Let’s dig a little deeper with Nmap and run it with the “-A” flag for service enumeration, os enumeration, and script scanning.
 
 ![3](/images/servmon/3.png)
 
