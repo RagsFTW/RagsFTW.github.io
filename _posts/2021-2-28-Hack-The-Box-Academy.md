@@ -307,7 +307,7 @@ In order to figure out what this log type meant, we again went to Google.
 
 Google gave us a great [resource](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/security_guide/sec-audit_record_types) in which we could learn about all of the log types.
 
-![48](/images/academy/48.png)
+![48](/images/academy/48.PNG)
 
 **Image 48** - Learning about the “CRED_ACQ” log type.
 
