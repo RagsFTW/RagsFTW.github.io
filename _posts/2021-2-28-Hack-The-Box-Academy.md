@@ -317,7 +317,7 @@ This particular log type did not give us much, but now we had a resource in whic
 
 **Image 49** - Learning about the “TTY” log type.
 
-In the “audit.log.3” file we found several TTY entries.  The parts of these entries appear to be hex encoded.
+In the “audit.log.3” file we found several TTY entries.  Parts of these entries appear to be hex encoded.
 
 ![50](/images/academy/50.png)
 
