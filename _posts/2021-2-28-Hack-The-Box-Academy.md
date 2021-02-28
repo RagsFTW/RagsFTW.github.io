@@ -327,13 +327,13 @@ We found an online hex decoder and started to run our strings through the decode
 
 ![51](/images/academy/51.png)
 
-**Image 51** - Decodine the hex.
+**Image 51** - Decoding the hex.
 
 It appears that the first line we tried, a user attempted to substitute mrb3n to run their commands.
 
 ![52](/images/academy/52.png)
 
-**Image 52** - Decodine the hex.
+**Image 52** - Decodin the hex.
 
 In the second line, we discover mrb3n’s password.  This would make sense as the first thing the system would ask for when attempting to su is the password for the desired user.  When we try to “su” to mrb3n ourselves, sure enough, it works!
 
