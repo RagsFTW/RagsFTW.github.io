@@ -281,7 +281,7 @@ By listing the files with the -la flag, we can see owners and group accesses.
 
 **Image 43** - The contents of /var/log.
 
-But this is still a lot, let’s filter it down a bit by only looking at things that the adm group can get too.
+But this is still a lot, let’s filter it down a bit by only looking at things that the adm group can get to.
 
 ![44](/images/academy/44.png)
 
