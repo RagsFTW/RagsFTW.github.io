@@ -5,7 +5,7 @@ title: Hack The Box - Academy
 
 Another [Hack The Box](https://www.hackthebox.eu/) system is in the books!
 
-![Title](/images/academy/Title.png)
+![Title](/images/academy/Title.PNG)
 
 For this Hack The Box (HTB) system, we chose “Academy".  Who is this “we” you speak of?  This HTB system was used as a training and mentoring aid for two of our co-workers who wanted to increase their offensive knowledge.  Without further delay, let's get root.txt!
 
